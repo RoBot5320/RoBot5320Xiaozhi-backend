@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <title>RoBot.5320 | Xiaozhi Web</title>
+  <title>RoBot.5320 | Trợ lý ảo RoBot5320</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
@@ -78,6 +78,8 @@
       align-items: center;
       justify-content: center;
       font-size: 20px;
+      text-decoration: none;
+      color: #fff;
     }
 
     .brand-text {
@@ -93,6 +95,15 @@
       display: flex;
       align-items: center;
       gap: 6px;
+    }
+
+    .brand-title a {
+      color: #f9fafb;
+      text-decoration: none;
+    }
+
+    .brand-title a:hover {
+      text-decoration: underline;
     }
 
     .brand-pill {
@@ -253,13 +264,6 @@
       color: var(--text-soft);
     }
 
-    .empty-state {
-      font-size: 13px;
-      color: var(--text-soft);
-      text-align: center;
-      padding: 18px 10px;
-    }
-
     .controls {
       display: flex;
       align-items: center;
@@ -303,6 +307,43 @@
       background: rgba(30,64,175,0.9);
       border-color: rgba(59,130,246,0.9);
       transform: translateY(-1px);
+    }
+
+    .text-input-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .text-input {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.9);
+      padding: 6px 10px;
+      font-size: 12px;
+      color: var(--text);
+      outline: none;
+    }
+
+    .text-input::placeholder {
+      color: var(--text-soft);
+    }
+
+    .send-btn {
+      border-radius: 999px;
+      border: none;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      background: radial-gradient(circle at 20% 0, rgba(34,197,94,1) 0, rgba(34,197,94,0.7) 32%, rgba(37,99,235,1) 100%);
+      color: #f9fafb;
+      cursor: pointer;
+    }
+
+    .send-btn:disabled {
+      opacity: 0.5;
+      cursor: default;
     }
 
     .mic-btn {
@@ -460,44 +501,6 @@
       color: var(--danger);
     }
 
-    .text-input-row {
-      margin-top: 4px;
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-
-    .text-input-row input {
-      flex: 1;
-      padding: 6px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.6);
-      background: rgba(15,23,42,0.95);
-      color: #e5e7eb;
-      font-size: 12px;
-      outline: none;
-    }
-
-    .text-input-row input::placeholder {
-      color: rgba(148,163,184,0.8);
-    }
-
-    .text-input-row button {
-      padding: 6px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(34,197,94,0.7);
-      background: radial-gradient(circle at 20% 0, rgba(34,197,94,1) 0, rgba(34,197,94,0.6) 40%, rgba(37,99,235,1) 100%);
-      color: #f9fafb;
-      font-size: 12px;
-      cursor: pointer;
-      transition: transform 0.08s, filter 0.12s;
-    }
-
-    .text-input-row button:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-    }
-
     .text-mono {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
@@ -528,13 +531,27 @@
   <div class="app">
     <header class="app-header">
       <div class="brand">
-        <div class="brand-icon">🤖</div>
+        <a
+          href="https://www.tiktok.com/@robot.5320?is_from_webapp=1&sender_device=pc"
+          target="_blank"
+          class="brand-icon"
+        >
+          🤖
+        </a>
         <div class="brand-text">
           <div class="brand-title">
-            RoBot.5320
-            <span class="brand-pill">Xiaozhi Web</span>
+            <a href="https://robotntq.netlify.app/" target="_blank">RoBot.5320</a>
+            <a
+              href="https://www.facebook.com/quoc.nguyentruong.96930?locale=vi_VN"
+              target="_blank"
+              class="brand-pill"
+            >
+              RoBot5320 Web
+            </a>
           </div>
-          <div class="brand-subtitle">Ghi âm → ChatGPT → TTS → ESP32</div>
+          <div class="brand-subtitle">
+            Trợ lý ảo RoBot5320 – Ghi âm → ChatGPT → TTS → ESP32
+          </div>
         </div>
       </div>
       <div class="status">
@@ -548,8 +565,7 @@
 
     <main class="main">
       <section class="chat-card">
-        <div id="chat" class="chat-scroll">
-        </div>
+        <div id="chat" class="chat-scroll"></div>
 
         <div class="controls">
           <div class="controls-left">
@@ -561,21 +577,28 @@
               <button class="hint-pill" data-hint="Xin chào, hãy tự giới thiệu.">Xin chào</button>
               <button class="hint-pill" data-hint="Hôm nay thời tiết thế nào?">Thời tiết</button>
               <button class="hint-pill" data-hint="Kể cho tôi một câu chuyện vui.">Kể chuyện</button>
-              <button class="hint-pill" data-hint="Gợi ý giúp tôi một dự án với ESP32-S3.">Dự án ESP32</button>
+              <button class="hint-pill" data-hint="Gợi ý giúp tôi một dự án với ESP32-S3.">
+                Dự án ESP32
+              </button>
+            </div>
+            <div class="text-input-row">
+              <input
+                id="text-input"
+                class="text-input"
+                placeholder="Gõ tin nhắn và nhấn Enter hoặc Gửi"
+              />
+              <button id="send-btn" class="send-btn">Gửi</button>
             </div>
             <div id="error" class="error-text" style="display:none"></div>
-
-            <div class="text-input-row">
-              <input id="text-input" type="text" placeholder="Gõ tin nhắn và nhấn Enter hoặc Gửi" />
-              <button id="text-send-btn" type="button">Gửi</button>
-            </div>
           </div>
 
           <button id="mic-btn" class="mic-btn mic-btn-idle" type="button">
             <div class="mic-icon">🎙</div>
             <div>
               <span id="mic-main" class="mic-text-main">Nhấn để nói</span>
-              <span id="mic-sub" class="mic-text-sub">Âm thanh sẽ gửi lên server riêng của bạn</span>
+              <span id="mic-sub" class="mic-text-sub">
+                Âm thanh sẽ gửi lên server RoBot5320 của bạn
+              </span>
             </div>
             <div class="mic-indicator">
               <div class="mic-indicator-bar"></div>
@@ -585,21 +608,27 @@
       </section>
 
       <aside class="side-card">
-        <div class="side-section-title">Pipeline Xiaozhi</div>
+        <div class="side-section-title">Pipeline RoBot5320</div>
         <div class="side-steps">
           <div class="step-row">
             <div class="step-badge">1</div>
             <div class="step-body">
               <div class="step-title">Ghi âm trên web</div>
-              <div class="step-desc">Sử dụng WebRTC/MediaRecorder thu âm từ mic trình duyệt, đóng gói thành file <span class="text-mono">webm/ogg</span>.</div>
+              <div class="step-desc">
+                Sử dụng WebRTC/MediaRecorder thu âm từ mic trình duyệt, đóng gói thành file
+                <span class="text-mono">webm/ogg</span>.
+              </div>
             </div>
           </div>
 
           <div class="step-row">
             <div class="step-badge">2</div>
             <div class="step-body">
-              <div class="step-title">Gửi lên server</div>
-              <div class="step-desc">Frontend POST file tới <span class="text-mono">/api/voice</span>. Server lưu tạm, gửi vào OpenAI ASR/ChatGPT.</div>
+              <div class="step-title">Gửi lên server RoBot5320</div>
+              <div class="step-desc">
+                Frontend POST file tới <span class="text-mono">/api/voice</span>. Backend RoBot5320
+                nhận, lưu tạm, gửi vào OpenAI ASR/ChatGPT.
+              </div>
             </div>
           </div>
 
@@ -607,7 +636,9 @@
             <div class="step-badge">3</div>
             <div class="step-body">
               <div class="step-title">ChatGPT + TTS</div>
-              <div class="step-desc">Server gọi ChatGPT sinh text trả lời, rồi gọi API TTS tạo file audio để ESP32 phát.</div>
+              <div class="step-desc">
+                Server gọi ChatGPT sinh text trả lời, rồi gọi API TTS tạo file audio để ESP32 phát.
+              </div>
             </div>
           </div>
 
@@ -615,7 +646,9 @@
             <div class="step-badge">4</div>
             <div class="step-body">
               <div class="step-title">ESP32 phát ra loa</div>
-              <div class="step-desc">ESP32 nhận link hoặc stream audio từ server, chơi qua I2S DAC/AMP.</div>
+              <div class="step-desc">
+                ESP32 nhận link hoặc stream audio từ server, chơi qua I2S DAC/AMP.
+              </div>
             </div>
           </div>
         </div>
@@ -623,7 +656,11 @@
         <div class="side-tagline">
           <span class="small-pill">
             <span>🔗</span>
-            <span>Backend: <span class="text-mono">/api/voice</span> + kênh riêng cho ESP32 (HTTP/WebSocket/MQTT)</span>
+            <span>
+              Backend RoBot5320:
+              <span class="text-mono"> /api/voice </span>
+              + kênh riêng cho ESP32 (HTTP/WebSocket/MQTT)
+            </span>
           </span>
         </div>
       </aside>
@@ -641,12 +678,13 @@
     const errorEl = document.getElementById("error")
     const latencyEl = document.getElementById("last-latency")
     const textInput = document.getElementById("text-input")
-    const textSendBtn = document.getElementById("text-send-btn")
+    const sendBtn = document.getElementById("send-btn")
 
     let mediaStream = null
     let mediaRecorder = null
     let chunks = []
     let isRecording = false
+    let sendingText = false
 
     function appendMessage(role, text) {
       const row = document.createElement("div")
@@ -672,11 +710,10 @@
       roleSpan.className = "msg-role"
       roleSpan.textContent = role === "assistant" ? "assistant" : "user"
 
+      const timeSpan = document.createElement("span")
       const now = new Date()
       const hh = String(now.getHours()).padStart(2, "0")
       const mm = String(now.getMinutes()).padStart(2, "0")
-
-      const timeSpan = document.createElement("span")
       timeSpan.textContent = hh + ":" + mm
 
       meta.appendChild(roleSpan)
@@ -715,7 +752,7 @@
       micBtn.classList.remove("mic-btn-recording")
       micBtn.classList.add("mic-btn-idle")
       micMain.textContent = "Nhấn để nói"
-      micSub.textContent = "Âm thanh sẽ gửi lên server riêng của bạn"
+      micSub.textContent = "Âm thanh sẽ gửi lên server RoBot5320 của bạn"
       statusDot.style.background = "#22c55e"
       statusMain.textContent = "Sẵn sàng ghi âm"
       statusSub.textContent = "Nhấn nút micro, nói rồi thả ra"
@@ -735,8 +772,8 @@
 
     function setThinkingUI() {
       statusDot.style.background = "#facc15"
-      statusMain.textContent = "Đang xử lý trên server"
-      statusSub.textContent = "Gửi audio / text → ChatGPT + TTS"
+      statusMain.textContent = "Đang xử lý trên server RoBot5320"
+      statusSub.textContent = "Gửi audio → ChatGPT + TTS"
     }
 
     async function initMedia() {
@@ -777,7 +814,7 @@
     async function uploadAudio(blob) {
       const start = performance.now()
       setError("")
-      appendMessage("user", "[Voice] Bạn vừa nói. Đang gửi lên server...")
+      appendMessage("user", "[Voice] Bạn vừa nói. Đang gửi lên server RoBot5320...")
 
       const form = new FormData()
       form.append("audio", blob, "input.webm")
@@ -833,57 +870,6 @@
       setIdleUI()
     }
 
-    async function sendTextMessage(text) {
-      const clean = (text || "").trim()
-      if (!clean) return
-
-      appendMessage("user", clean)
-      setThinkingUI()
-      setError("")
-
-      const start = performance.now()
-
-      try {
-        const response = await fetch("/api/text", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            text: clean,
-            device_id: "web-chat"
-          })
-        })
-
-        if (!response.ok) {
-          const msg = await response.text().catch(() => "")
-          setError("Lỗi /api/text: " + response.status + " " + msg)
-          setIdleUI()
-          return
-        }
-
-        const data = await response.json()
-
-        const latency = Math.round(performance.now() - start)
-        latencyEl.style.display = "inline-flex"
-        latencyEl.textContent = "Server: " + latency + " ms"
-
-        if (data.assistant_text && data.assistant_text.trim()) {
-          appendMessage("assistant", data.assistant_text.trim())
-        } else {
-          appendMessage("assistant", "Server không trả assistant_text.")
-        }
-
-        if (data.tts_url) {
-          statusSub.textContent = "TTS đã sẵn sàng cho ESP32: " + data.tts_url
-        } else {
-          statusSub.textContent = "Đã xử lý xong. ESP32 sẽ tự lấy audio từ server."
-        }
-      } catch (e) {
-        setError("Không gửi được tin nhắn: " + e.message)
-      } finally {
-        setIdleUI()
-      }
-    }
-
     micBtn.addEventListener("mousedown", () => {
       if (isRecording) return
       startRecording()
@@ -912,29 +898,82 @@
       stopIfRecording()
     })
 
-    // Nút Gửi & Enter
-    if (textSendBtn && textInput) {
-      textSendBtn.addEventListener("click", () => {
-        const value = textInput.value
-        textInput.value = ""
-        sendTextMessage(value)
-      })
-
-      textInput.addEventListener("keydown", e => {
-        if (e.key === "Enter") {
-          const value = textInput.value
-          textInput.value = ""
-          sendTextMessage(value)
-        }
-      })
-    }
-
-    // Hint-pill dùng endpoint /api/text
     document.querySelectorAll(".hint-pill").forEach(btn => {
       btn.addEventListener("click", () => {
         const text = btn.getAttribute("data-hint") || btn.textContent
-        sendTextMessage(text)
+        textInput.value = text
+        textInput.focus()
       })
+    })
+
+    async function sendTextMessage() {
+      const text = (textInput.value || "").trim()
+      if (!text || sendingText) return
+      sendingText = true
+      sendBtn.disabled = true
+      setError("")
+      appendMessage("user", text)
+      textInput.value = ""
+
+      const start = performance.now()
+      setThinkingUI()
+
+      let response
+      try {
+        response = await fetch("/api/text", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text })
+        })
+      } catch (e) {
+        setError("Không gửi được text tới server: " + e.message)
+        setIdleUI()
+        sendingText = false
+        sendBtn.disabled = false
+        return
+      }
+
+      if (!response.ok) {
+        const t = await response.text().catch(() => "")
+        setError("Server trả lỗi /api/text: " + response.status + " " + t)
+        setIdleUI()
+        sendingText = false
+        sendBtn.disabled = false
+        return
+      }
+
+      let data
+      try {
+        data = await response.json()
+      } catch (e) {
+        setError("Không parse được JSON /api/text: " + e.message)
+        setIdleUI()
+        sendingText = false
+        sendBtn.disabled = false
+        return
+      }
+
+      const latency = Math.round(performance.now() - start)
+      latencyEl.style.display = "inline-flex"
+      latencyEl.textContent = "Server: " + latency + " ms"
+
+      if (data.assistant_text && data.assistant_text.trim()) {
+        appendMessage("assistant", data.assistant_text.trim())
+      } else {
+        appendMessage("assistant", "Server không trả về nội dung assistant_text.")
+      }
+
+      setIdleUI()
+      sendingText = false
+      sendBtn.disabled = false
+    }
+
+    sendBtn.addEventListener("click", sendTextMessage)
+    textInput.addEventListener("keydown", e => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault()
+        sendTextMessage()
+      }
     })
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {

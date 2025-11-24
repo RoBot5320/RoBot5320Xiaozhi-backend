@@ -1,168 +1,169 @@
-const express = require("express");
-const multer = require("multer");
-const fs = require("fs");
-const path = require("path");
-const OpenAI = require("openai");
+const express = require("express")
+const multer = require("multer")
+const fs = require("fs")
+const path = require("path")
+const OpenAI = require("openai")
 
-const app = express();
-const upload = multer({ storage: multer.memoryStorage() });
+const app = express()
+const upload = multer({ storage: multer.memoryStorage() })
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
-});
+})
 
-// ---------------------------
-//  Bộ nhớ hội thoại theo device_id
-// ---------------------------
-const conversations = {}; // { device_id: [ {role, content}, ... ] }
+const conversations = {}
 
-// Get history helper
 function getHistory(deviceId) {
-  if (!conversations[deviceId]) conversations[deviceId] = [];
-  return conversations[deviceId];
+  if (!conversations[deviceId]) conversations[deviceId] = []
+  return conversations[deviceId]
 }
 
-// Add message helper
 function addMessage(deviceId, role, content) {
-  if (!conversations[deviceId]) conversations[deviceId] = [];
-  conversations[deviceId].push({ role, content });
-
-  // giữ lại tối đa 20 messages gần nhất
+  if (!conversations[deviceId]) conversations[deviceId] = []
+  conversations[deviceId].push({ role, content })
   if (conversations[deviceId].length > 20) {
-    conversations[deviceId] = conversations[deviceId].slice(-20);
+    conversations[deviceId] = conversations[deviceId].slice(-20)
   }
 }
 
-// ---------------------------
-//  Chuẩn bị thư mục TTS
-// ---------------------------
-const audioDir = path.join(__dirname, "tts");
-if (!fs.existsSync(audioDir)) {
-  fs.mkdirSync(audioDir, { recursive: true });
+function checkCreatorQuestion(text) {
+  if (!text) return null
+  const t = text.toLowerCase()
+
+  const keywords = [
+    "nguồn gốc",
+    "cha đẻ",
+    "cha de",
+    "ai tạo ra bạn",
+    "ai tao ra ban",
+    "ai tạo ra mày",
+    "ai tao ra may",
+    "ai làm ra bạn",
+    "ai lam ra ban",
+    "ai lập trình bạn",
+    "ai lap trinh ban",
+    "who created you",
+    "who made you",
+    "your creator"
+  ]
+
+  const matched = keywords.some(k => t.includes(k))
+  if (!matched) return null
+
+  return "RoBot5320 được tạo ra và phát triển bởi anh Nguyễn Trường Quốc (2k5)."
 }
 
-app.use(express.static(__dirname));
-app.use("/tts", express.static(audioDir));
-app.use(express.json());
-
-// ---------------------------
-//  Chuyển giọng nói → text
-// ---------------------------
 async function transcribeAudio(buffer) {
-  const tempPath = path.join(__dirname, "temp_input.webm");
-  await fs.promises.writeFile(tempPath, buffer);
+  const tempPath = path.join(__dirname, "temp_input.webm")
+  await fs.promises.writeFile(tempPath, buffer)
 
   const resp = await openai.audio.transcriptions.create({
     file: fs.createReadStream(tempPath),
     model: "gpt-4o-transcribe"
-  });
+  })
 
-  await fs.promises.unlink(tempPath);
-  return resp.text || "";
+  await fs.promises.unlink(tempPath)
+  return resp.text || ""
 }
 
-// ---------------------------
-//  ChatGPT với bộ nhớ
-// ---------------------------
 async function askChatGpt(text, deviceId = "web") {
-  addMessage(deviceId, "user", text);
+  addMessage(deviceId, "user", text)
+
+  const specialAnswer = checkCreatorQuestion(text)
+  if (specialAnswer) {
+    addMessage(deviceId, "assistant", specialAnswer)
+    return specialAnswer
+  }
 
   const completion = await openai.chat.completions.create({
     model: "gpt-4.1-mini",
     messages: [
       {
         role: "system",
-        content: "Bạn là trợ lý Xiaozhi, trả lời tiếng Việt, ngắn gọn, thân thiện."
+        content:
+          "Bạn là trợ lý RoBot5320 – một trợ lý ảo thân thiện, thông minh và chỉ xưng hô tên RoBot5320. Trả lời tiếng Việt, tự nhiên và ngắn gọn. Nếu có ai hỏi về nguồn gốc, cha đẻ, người tạo ra hoặc người lập trình RoBot5320 thì trả lời rằng RoBot5320 được tạo ra bởi anh Nguyễn Trường Quốc (2k5)."
       },
       ...getHistory(deviceId)
     ]
-  });
+  })
 
-  const assistantText = completion.choices[0].message.content || "";
-  addMessage(deviceId, "assistant", assistantText);
+  const assistantText = completion.choices[0].message.content || ""
+  addMessage(deviceId, "assistant", assistantText)
 
-  return assistantText;
+  return assistantText
 }
 
-// ---------------------------
-//  Fake TTS → thay bằng TTS thật sau
-// ---------------------------
 async function callTts(text, outPath) {
-  await fs.promises.writeFile(outPath, Buffer.from("FAKE_TTS_DATA"));
+  await fs.promises.writeFile(outPath, Buffer.from("FAKE_TTS_DATA"))
 }
 
-// ---------------------------
-//  API: Nhận voice từ web
-// ---------------------------
+const audioDir = path.join(__dirname, "tts")
+if (!fs.existsSync(audioDir)) {
+  fs.mkdirSync(audioDir, { recursive: true })
+}
+
+app.use(express.static(__dirname))
+app.use("/tts", express.static(audioDir))
+app.use(express.json())
+
 app.post("/api/voice", upload.single("audio"), async (req, res) => {
   try {
-    if (!req.file) return res.status(400).json({ error: "Thiếu audio" });
+    if (!req.file) return res.status(400).json({ error: "Thiếu audio" })
 
-    const deviceId = req.headers["x-device-id"] || "web";
+    const deviceId = req.headers["x-device-id"] || "web"
 
-    const userText = await transcribeAudio(req.file.buffer);
-    const assistantText = await askChatGpt(userText, deviceId);
+    const userText = await transcribeAudio(req.file.buffer)
+    const assistantText = await askChatGpt(userText, deviceId)
 
-    const fileName = Date.now() + ".wav";
-    const outPath = path.join(audioDir, fileName);
-    await callTts(assistantText, outPath);
+    const fileName = Date.now() + ".wav"
+    const outPath = path.join(audioDir, fileName)
+    await callTts(assistantText, outPath)
 
     res.json({
       user_text: userText,
       assistant_text: assistantText,
       tts_url: "/tts/" + fileName,
-      device_id: deviceId,
-    });
-
+      device_id: deviceId
+    })
   } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: e.message });
+    console.error(e)
+    res.status(500).json({ error: e.message })
   }
-});
+})
 
-// ---------------------------
-//  API: Chat bằng text
-// ---------------------------
 app.post("/api/text", async (req, res) => {
   try {
-    const text = req.body.text;
-    if (!text) return res.status(400).json({ error: "Thiếu text" });
+    const text = req.body.text
+    if (!text) return res.status(400).json({ error: "Thiếu text" })
 
-    const deviceId = req.headers["x-device-id"] || "web";
+    const deviceId = req.headers["x-device-id"] || "web"
 
-    const assistantText = await askChatGpt(text, deviceId);
+    const assistantText = await askChatGpt(text, deviceId)
 
-    const fileName = Date.now() + ".wav";
-    const outPath = path.join(audioDir, fileName);
-    await callTts(assistantText, outPath);
+    const fileName = Date.now() + ".wav"
+    const outPath = path.join(audioDir, fileName)
+    await callTts(assistantText, outPath)
 
     res.json({
       user_text: text,
       assistant_text: assistantText,
       tts_url: "/tts/" + fileName,
       device_id: deviceId
-    });
-
+    })
   } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: e.message });
+    console.error(e)
+    res.status(500).json({ error: e.message })
   }
-});
+})
 
-// ---------------------------
-//  API: reset history theo device
-// ---------------------------
 app.post("/api/reset", (req, res) => {
-  const deviceId = req.headers["x-device-id"] || "web";
-  conversations[deviceId] = [];
-  res.json({ ok: true });
-});
+  const deviceId = req.headers["x-device-id"] || "web"
+  conversations[deviceId] = []
+  res.json({ ok: true })
+})
 
-// ---------------------------
-//  START SERVER
-// ---------------------------
 app.listen(PORT, () => {
-  console.log("Backend running http://localhost:" + PORT);
-});
+  console.log("Backend running http://localhost:" + PORT)
+})
