@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>RoBot.5320 | Xiaozhi Web</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-alt: #0f172a;
+      --accent: #22c55e;
+      --accent-soft: rgba(34,197,94,0.15);
+      --accent-soft2: rgba(59,130,246,0.25);
+      --danger: #ef4444;
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --border: rgba(148,163,184,0.35);
+      --radius-xl: 18px;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --shadow-soft: 0 18px 40px rgba(15,23,42,0.85);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0, #020617 55%);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 960px;
+      background: linear-gradient(135deg, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148,163,184,0.4);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      backdrop-filter: blur(20px);
+    }
+
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 4px 4px 10px 4px;
+      border-bottom: 1px solid rgba(148,163,184,0.4);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #22c55e 0, #22c55e 12%, #0ea5e9 40%, #020617 75%);
+      position: relative;
+      box-shadow: 0 0 18px rgba(34,197,94,0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-title {
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .brand-pill {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.4);
+      color: var(--accent);
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.8);
+      border: 1px solid rgba(148,163,184,0.5);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(34,197,94,0.7);
+    }
+
+    .status-text-strong {
+      font-weight: 500;
+    }
+
+    .status-text-soft {
+      color: var(--text-soft);
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.2fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .chat-card {
+      background: radial-gradient(circle at top left, rgba(59,130,246,0.12) 0, rgba(15,23,42,0.98) 45%);
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148,163,184,0.45);
+      padding: 12px 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chat-scroll {
+      max-height: 360px;
+      overflow-y: auto;
+      padding-right: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(148,163,184,0.8) transparent;
+      font-size: 13px;
+    }
+
+    .chat-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .chat-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .chat-scroll::-webkit-scrollbar-thumb {
+      background: rgba(148,163,184,0.85);
+      border-radius: 999px;
+    }
+
+    .msg-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .msg-row.user {
+      justify-content: flex-end;
+    }
+
+    .msg-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #22c55e 0, #22c55e 25%, #0ea5e9 60%, #020617 100%);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .msg-avatar.user {
+      background: radial-gradient(circle at 30% 20%, #38bdf8 0, #38bdf8 32%, #a855f7 60%, #020617 100%);
+    }
+
+    .msg-bubble {
+      max-width: 78%;
+      padding: 7px 10px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      line-height: 1.45;
+      word-wrap: break-word;
+      backdrop-filter: blur(4px);
+    }
+
+    .msg-row.assistant .msg-bubble {
+      background: rgba(15,23,42,0.95);
+    }
+
+    .msg-row.user .msg-bubble {
+      background: var(--accent-soft);
+      border-color: rgba(34,197,94,0.7);
+    }
+
+    .msg-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 3px;
+    }
+
+    .msg-role {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      font-size: 10px;
+    }
+
+    .chip {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      color: var(--text-soft);
+    }
+
+    .empty-state {
+      font-size: 13px;
+      color: var(--text-soft);
+      text-align: center;
+      padding: 18px 10px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 6px 4px 2px;
+      border-top: 1px dashed rgba(148,163,184,0.45);
+      margin-top: 4px;
+    }
+
+    .controls-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .controls-left strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .hint-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .hint-pill {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px dashed rgba(148,163,184,0.5);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.08s;
+    }
+
+    .hint-pill:hover {
+      background: rgba(30,64,175,0.9);
+      border-color: rgba(59,130,246,0.9);
+      transform: translateY(-1px);
+    }
+
+    .mic-btn {
+      position: relative;
+      border: none;
+      border-radius: 999px;
+      padding: 7px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      color: #f9fafb;
+      background: radial-gradient(circle at 20% 0, rgba(34,197,94,1) 0, rgba(34,197,94,0.6) 32%, rgba(37,99,235,1) 100%);
+      box-shadow: 0 0 0 0 rgba(34,197,94,0.5);
+      transition: transform 0.1s, box-shadow 0.2s, filter 0.12s;
+    }
+
+    .mic-btn-idle:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+      box-shadow: 0 0 0 6px rgba(34,197,94,0.18);
+    }
+
+    .mic-btn-recording {
+      background: radial-gradient(circle at 20% 0, rgba(239,68,68,1) 0, rgba(239,68,68,0.6) 32%, rgba(37,99,235,1) 100%);
+      box-shadow: 0 0 0 8px rgba(248,113,113,0.45);
+      animation: pulse 1.4s infinite;
+    }
+
+    .mic-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    .mic-text-main {
+      display: block;
+    }
+
+    .mic-text-sub {
+      display: block;
+      font-size: 11px;
+      opacity: 0.85;
+    }
+
+    .mic-indicator {
+      width: 5px;
+      height: 16px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mic-indicator-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 30%;
+      background: linear-gradient(to top, #22c55e, #a3e635);
+      transform-origin: bottom;
+    }
+
+    .mic-btn-recording .mic-indicator-bar {
+      animation: level 0.5s infinite ease-in-out alternate;
+    }
+
+    .side-card {
+      background: radial-gradient(circle at top right, rgba(34,197,94,0.12) 0, rgba(15,23,42,0.98) 45%);
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148,163,184,0.5);
+      padding: 12px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .side-section-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    .side-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .step-row {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 6px;
+      align-items: start;
+    }
+
+    .step-badge {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.7);
+    }
+
+    .step-body {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .step-title {
+      font-weight: 500;
+      font-size: 12px;
+    }
+
+    .step-desc {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .side-tagline {
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .small-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px dashed rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .error-text {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--danger);
+    }
+
+    .text-input-row {
+      margin-top: 4px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .text-input-row input {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.95);
+      color: #e5e7eb;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .text-input-row input::placeholder {
+      color: rgba(148,163,184,0.8);
+    }
+
+    .text-input-row button {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(34,197,94,0.7);
+      background: radial-gradient(circle at 20% 0, rgba(34,197,94,1) 0, rgba(34,197,94,0.6) 40%, rgba(37,99,235,1) 100%);
+      color: #f9fafb;
+      font-size: 12px;
+      cursor: pointer;
+      transition: transform 0.08s, filter 0.12s;
+    }
+
+    .text-input-row button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
+
+    .text-mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 6px rgba(248,113,113,0.6);
+      }
+      70% {
+        box-shadow: 0 0 0 12px rgba(248,113,113,0);
+      }
+      100% {
+        box-shadow: 0 0 0 6px rgba(248,113,113,0);
+      }
+    }
+
+    @keyframes level {
+      0% {
+        transform: scaleY(0.2);
+      }
+      100% {
+        transform: scaleY(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">🤖</div>
+        <div class="brand-text">
+          <div class="brand-title">
+            RoBot.5320
+            <span class="brand-pill">Xiaozhi Web</span>
+          </div>
+          <div class="brand-subtitle">Ghi âm → ChatGPT → TTS → ESP32</div>
+        </div>
+      </div>
+      <div class="status">
+        <div class="status-dot" id="status-dot"></div>
+        <div>
+          <div class="status-text-strong" id="status-main">Sẵn sàng ghi âm</div>
+          <div class="status-text-soft" id="status-sub">Nhấn giữ nút micro để nói</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="chat-card">
+        <div id="chat" class="chat-scroll">
+        </div>
+
+        <div class="controls">
+          <div class="controls-left">
+            <div>
+              <strong>Điều khiển</strong>
+              <span id="last-latency" class="chip" style="margin-left:6px; display:none"></span>
+            </div>
+            <div class="hint-row">
+              <button class="hint-pill" data-hint="Xin chào, hãy tự giới thiệu.">Xin chào</button>
+              <button class="hint-pill" data-hint="Hôm nay thời tiết thế nào?">Thời tiết</button>
+              <button class="hint-pill" data-hint="Kể cho tôi một câu chuyện vui.">Kể chuyện</button>
+              <button class="hint-pill" data-hint="Gợi ý giúp tôi một dự án với ESP32-S3.">Dự án ESP32</button>
+            </div>
+            <div id="error" class="error-text" style="display:none"></div>
+
+            <div class="text-input-row">
+              <input id="text-input" type="text" placeholder="Gõ tin nhắn và nhấn Enter hoặc Gửi" />
+              <button id="text-send-btn" type="button">Gửi</button>
+            </div>
+          </div>
+
+          <button id="mic-btn" class="mic-btn mic-btn-idle" type="button">
+            <div class="mic-icon">🎙</div>
+            <div>
+              <span id="mic-main" class="mic-text-main">Nhấn để nói</span>
+              <span id="mic-sub" class="mic-text-sub">Âm thanh sẽ gửi lên server riêng của bạn</span>
+            </div>
+            <div class="mic-indicator">
+              <div class="mic-indicator-bar"></div>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <aside class="side-card">
+        <div class="side-section-title">Pipeline Xiaozhi</div>
+        <div class="side-steps">
+          <div class="step-row">
+            <div class="step-badge">1</div>
+            <div class="step-body">
+              <div class="step-title">Ghi âm trên web</div>
+              <div class="step-desc">Sử dụng WebRTC/MediaRecorder thu âm từ mic trình duyệt, đóng gói thành file <span class="text-mono">webm/ogg</span>.</div>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <div class="step-badge">2</div>
+            <div class="step-body">
+              <div class="step-title">Gửi lên server</div>
+              <div class="step-desc">Frontend POST file tới <span class="text-mono">/api/voice</span>. Server lưu tạm, gửi vào OpenAI ASR/ChatGPT.</div>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <div class="step-badge">3</div>
+            <div class="step-body">
+              <div class="step-title">ChatGPT + TTS</div>
+              <div class="step-desc">Server gọi ChatGPT sinh text trả lời, rồi gọi API TTS tạo file audio để ESP32 phát.</div>
+            </div>
+          </div>
+
+          <div class="step-row">
+            <div class="step-badge">4</div>
+            <div class="step-body">
+              <div class="step-title">ESP32 phát ra loa</div>
+              <div class="step-desc">ESP32 nhận link hoặc stream audio từ server, chơi qua I2S DAC/AMP.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-tagline">
+          <span class="small-pill">
+            <span>🔗</span>
+            <span>Backend: <span class="text-mono">/api/voice</span> + kênh riêng cho ESP32 (HTTP/WebSocket/MQTT)</span>
+          </span>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const chatEl = document.getElementById("chat")
+    const micBtn = document.getElementById("mic-btn")
+    const statusDot = document.getElementById("status-dot")
+    const statusMain = document.getElementById("status-main")
+    const statusSub = document.getElementById("status-sub")
+    const micMain = document.getElementById("mic-main")
+    const micSub = document.getElementById("mic-sub")
+    const errorEl = document.getElementById("error")
+    const latencyEl = document.getElementById("last-latency")
+    const textInput = document.getElementById("text-input")
+    const textSendBtn = document.getElementById("text-send-btn")
+
+    let mediaStream = null
+    let mediaRecorder = null
+    let chunks = []
+    let isRecording = false
+
+    function appendMessage(role, text) {
+      const row = document.createElement("div")
+      row.className = "msg-row " + role
+
+      const avatar = document.createElement("div")
+      if (role === "assistant") {
+        avatar.className = "msg-avatar"
+        avatar.textContent = "AI"
+      } else {
+        avatar.className = "msg-avatar user"
+        avatar.textContent = "You"
+      }
+
+      const bubble = document.createElement("div")
+      bubble.className = "msg-bubble"
+      bubble.textContent = text
+
+      const meta = document.createElement("div")
+      meta.className = "msg-meta"
+
+      const roleSpan = document.createElement("span")
+      roleSpan.className = "msg-role"
+      roleSpan.textContent = role === "assistant" ? "assistant" : "user"
+
+      const now = new Date()
+      const hh = String(now.getHours()).padStart(2, "0")
+      const mm = String(now.getMinutes()).padStart(2, "0")
+
+      const timeSpan = document.createElement("span")
+      timeSpan.textContent = hh + ":" + mm
+
+      meta.appendChild(roleSpan)
+      meta.appendChild(timeSpan)
+
+      const side = document.createElement("div")
+      side.style.display = "flex"
+      side.style.flexDirection = "column"
+      side.appendChild(bubble)
+      side.appendChild(meta)
+
+      if (role === "assistant") {
+        row.appendChild(avatar)
+        row.appendChild(side)
+      } else {
+        row.appendChild(side)
+        row.appendChild(avatar)
+      }
+
+      chatEl.appendChild(row)
+      chatEl.scrollTop = chatEl.scrollHeight
+    }
+
+    function setError(msg) {
+      if (!msg) {
+        errorEl.style.display = "none"
+        errorEl.textContent = ""
+        return
+      }
+      errorEl.style.display = "block"
+      errorEl.textContent = msg
+    }
+
+    function setIdleUI() {
+      isRecording = false
+      micBtn.classList.remove("mic-btn-recording")
+      micBtn.classList.add("mic-btn-idle")
+      micMain.textContent = "Nhấn để nói"
+      micSub.textContent = "Âm thanh sẽ gửi lên server riêng của bạn"
+      statusDot.style.background = "#22c55e"
+      statusMain.textContent = "Sẵn sàng ghi âm"
+      statusSub.textContent = "Nhấn nút micro, nói rồi thả ra"
+    }
+
+    function setRecordingUI() {
+      isRecording = true
+      micBtn.classList.remove("mic-btn-idle")
+      micBtn.classList.add("mic-btn-recording")
+      micMain.textContent = "Đang ghi âm..."
+      micSub.textContent = "Nói xong thả nút để gửi lên server"
+      statusDot.style.background = "#ef4444"
+      statusMain.textContent = "Đang ghi âm"
+      statusSub.textContent = "Giữ nút micro và nói"
+      setError("")
+    }
+
+    function setThinkingUI() {
+      statusDot.style.background = "#facc15"
+      statusMain.textContent = "Đang xử lý trên server"
+      statusSub.textContent = "Gửi audio / text → ChatGPT + TTS"
+    }
+
+    async function initMedia() {
+      if (mediaStream) return
+      mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true })
+    }
+
+    async function startRecording() {
+      try {
+        await initMedia()
+      } catch (e) {
+        setError("Không truy cập được microphone: " + e.message)
+        return
+      }
+
+      chunks = []
+      mediaRecorder = new MediaRecorder(mediaStream, { mimeType: "audio/webm" })
+      mediaRecorder.ondataavailable = e => {
+        if (e.data.size > 0) chunks.push(e.data)
+      }
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: "audio/webm" })
+        uploadAudio(blob)
+      }
+      mediaRecorder.start()
+      setRecordingUI()
+    }
+
+    function stopRecording() {
+      if (!mediaRecorder || mediaRecorder.state !== "recording") {
+        setIdleUI()
+        return
+      }
+      mediaRecorder.stop()
+      setThinkingUI()
+    }
+
+    async function uploadAudio(blob) {
+      const start = performance.now()
+      setError("")
+      appendMessage("user", "[Voice] Bạn vừa nói. Đang gửi lên server...")
+
+      const form = new FormData()
+      form.append("audio", blob, "input.webm")
+
+      let response
+      try {
+        response = await fetch("/api/voice", {
+          method: "POST",
+          body: form
+        })
+      } catch (e) {
+        setError("Không gửi được audio tới server: " + e.message)
+        setIdleUI()
+        return
+      }
+
+      if (!response.ok) {
+        const text = await response.text().catch(() => "")
+        setError("Server trả lỗi: " + response.status + " " + text)
+        setIdleUI()
+        return
+      }
+
+      let data
+      try {
+        data = await response.json()
+      } catch (e) {
+        setError("Không parse được JSON từ server: " + e.message)
+        setIdleUI()
+        return
+      }
+
+      const latency = Math.round(performance.now() - start)
+      latencyEl.style.display = "inline-flex"
+      latencyEl.textContent = "Server: " + latency + " ms"
+
+      if (data.user_text && data.user_text.trim()) {
+        appendMessage("user", data.user_text.trim())
+      }
+
+      if (data.assistant_text && data.assistant_text.trim()) {
+        appendMessage("assistant", data.assistant_text.trim())
+      } else {
+        appendMessage("assistant", "Server không trả về nội dung assistant_text.")
+      }
+
+      if (data.tts_url) {
+        statusSub.textContent = "TTS đã sẵn sàng cho ESP32: " + data.tts_url
+      } else {
+        statusSub.textContent = "Đã xử lý xong. ESP32 sẽ tự lấy audio từ server."
+      }
+
+      setIdleUI()
+    }
+
+    async function sendTextMessage(text) {
+      const clean = (text || "").trim()
+      if (!clean) return
+
+      appendMessage("user", clean)
+      setThinkingUI()
+      setError("")
+
+      const start = performance.now()
+
+      try {
+        const response = await fetch("/api/text", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text: clean,
+            device_id: "web-chat"
+          })
+        })
+
+        if (!response.ok) {
+          const msg = await response.text().catch(() => "")
+          setError("Lỗi /api/text: " + response.status + " " + msg)
+          setIdleUI()
+          return
+        }
+
+        const data = await response.json()
+
+        const latency = Math.round(performance.now() - start)
+        latencyEl.style.display = "inline-flex"
+        latencyEl.textContent = "Server: " + latency + " ms"
+
+        if (data.assistant_text && data.assistant_text.trim()) {
+          appendMessage("assistant", data.assistant_text.trim())
+        } else {
+          appendMessage("assistant", "Server không trả assistant_text.")
+        }
+
+        if (data.tts_url) {
+          statusSub.textContent = "TTS đã sẵn sàng cho ESP32: " + data.tts_url
+        } else {
+          statusSub.textContent = "Đã xử lý xong. ESP32 sẽ tự lấy audio từ server."
+        }
+      } catch (e) {
+        setError("Không gửi được tin nhắn: " + e.message)
+      } finally {
+        setIdleUI()
+      }
+    }
+
+    micBtn.addEventListener("mousedown", () => {
+      if (isRecording) return
+      startRecording()
+    })
+
+    micBtn.addEventListener("touchstart", e => {
+      e.preventDefault()
+      if (isRecording) return
+      startRecording()
+    }, { passive: false })
+
+    function stopIfRecording() {
+      if (isRecording) stopRecording()
+    }
+
+    micBtn.addEventListener("mouseup", stopIfRecording)
+    micBtn.addEventListener("mouseleave", () => {
+      if (isRecording) stopRecording()
+    })
+    micBtn.addEventListener("touchend", e => {
+      e.preventDefault()
+      stopIfRecording()
+    })
+    micBtn.addEventListener("touchcancel", e => {
+      e.preventDefault()
+      stopIfRecording()
+    })
+
+    // Nút Gửi & Enter
+    if (textSendBtn && textInput) {
+      textSendBtn.addEventListener("click", () => {
+        const value = textInput.value
+        textInput.value = ""
+        sendTextMessage(value)
+      })
+
+      textInput.addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+          const value = textInput.value
+          textInput.value = ""
+          sendTextMessage(value)
+        }
+      })
+    }
+
+    // Hint-pill dùng endpoint /api/text
+    document.querySelectorAll(".hint-pill").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const text = btn.getAttribute("data-hint") || btn.textContent
+        sendTextMessage(text)
+      })
+    })
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      setError("Trình duyệt này không hỗ trợ ghi âm microphone.")
+      micBtn.disabled = true
+      micBtn.style.opacity = "0.5"
+    }
+  </script>
+</body>
+</html>
