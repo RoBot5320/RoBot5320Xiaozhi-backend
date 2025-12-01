@@ -95,10 +95,6 @@ async function askChatGpt(text, deviceId = "web") {
   return assistantText
 }
 
-/**
- * TTS thật: tạo file OGG/Opus từ text
- * (Giữ nguyên RoBot5320, chỉ thay cách ghi file)
- */
 async function callTts(text, outPath) {
   const speech = await openai.audio.speech.create({
     model: "gpt-4o-mini-tts",
@@ -116,11 +112,12 @@ if (!fs.existsSync(audioDir)) {
   fs.mkdirSync(audioDir, { recursive: true })
 }
 
-app.use(express.static(__dirname))
-app.use("/tts", express.static(audioDir))
 app.use(express.json())
 
-// Ghi âm giọng nói
+app.get("/", (req, res) => {
+  res.send("RoBot5320 Xiaozhi backend OK")
+})
+
 app.post("/api/voice", upload.single("audio"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "Thiếu audio" })
@@ -130,7 +127,6 @@ app.post("/api/voice", upload.single("audio"), async (req, res) => {
     const userText = await transcribeAudio(req.file.buffer)
     const assistantText = await askChatGpt(userText, deviceId)
 
-    // ĐỔI .wav → .opus
     const fileName = Date.now() + ".opus"
     const outPath = path.join(audioDir, fileName)
     await callTts(assistantText, outPath)
@@ -147,7 +143,6 @@ app.post("/api/voice", upload.single("audio"), async (req, res) => {
   }
 })
 
-// Nhận text (bàn phím + hint)
 app.post("/api/text", async (req, res) => {
   try {
     const text = req.body.text
@@ -157,7 +152,6 @@ app.post("/api/text", async (req, res) => {
 
     const assistantText = await askChatGpt(text, deviceId)
 
-    // ĐỔI .wav → .opus
     const fileName = Date.now() + ".opus"
     const outPath = path.join(audioDir, fileName)
     await callTts(assistantText, outPath)
@@ -180,6 +174,8 @@ app.post("/api/reset", (req, res) => {
   res.json({ ok: true })
 })
 
-app.listen(PORT, () => {
-  console.log("Backend running http://localhost:" + PORT)
+app.use("/tts", express.static(audioDir))
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log("Backend running on port " + PORT)
 })
