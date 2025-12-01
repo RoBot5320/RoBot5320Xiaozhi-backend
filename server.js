@@ -3,6 +3,7 @@ const multer = require("multer")
 const fs = require("fs")
 const path = require("path")
 const OpenAI = require("openai")
+const cors = require("cors")
 
 const app = express()
 const upload = multer({ storage: multer.memoryStorage() })
@@ -112,6 +113,20 @@ if (!fs.existsSync(audioDir)) {
   fs.mkdirSync(audioDir, { recursive: true })
 }
 
+/* CORS cho Netlify + mọi nơi khác (nếu cần) */
+app.use(
+  cors({
+    origin: [
+      "https://chatbot5320robot.netlify.app",
+      "https://robotntq.netlify.app"
+    ],
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "x-device-id"]
+  })
+)
+
+app.use(express.static(__dirname))
+app.use("/tts", express.static(audioDir))
 app.use(express.json())
 
 app.get("/", (req, res) => {
@@ -174,8 +189,6 @@ app.post("/api/reset", (req, res) => {
   res.json({ ok: true })
 })
 
-app.use("/tts", express.static(audioDir))
-
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, () => {
   console.log("Backend running on port " + PORT)
 })
