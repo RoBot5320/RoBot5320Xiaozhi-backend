@@ -10,7 +10,6 @@
       --bg-alt: #0f172a;
       --accent: #22c55e;
       --accent-soft: rgba(34,197,94,0.15);
-      --accent-soft2: rgba(59,130,246,0.25);
       --danger: #ef4444;
       --text: #e5e7eb;
       --text-soft: #9ca3af;
@@ -20,13 +19,7 @@
       --radius-md: 10px;
       --shadow-soft: 0 18px 40px rgba(15,23,42,0.85);
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: radial-gradient(circle at top, #1e293b 0, #020617 55%);
@@ -37,7 +30,6 @@
       min-height: 100vh;
       padding: 16px;
     }
-
     .app {
       width: 100%;
       max-width: 960px;
@@ -50,8 +42,9 @@
       flex-direction: column;
       gap: 12px;
       backdrop-filter: blur(20px);
+      position: relative;
+      overflow: hidden;
     }
-
     .app-header {
       display: flex;
       align-items: center;
@@ -60,19 +53,16 @@
       padding: 4px 4px 10px 4px;
       border-bottom: 1px solid rgba(148,163,184,0.4);
     }
-
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
     }
-
     .brand-icon {
       width: 40px;
       height: 40px;
       border-radius: 999px;
       background: radial-gradient(circle at 30% 20%, #22c55e 0, #22c55e 12%, #0ea5e9 40%, #020617 75%);
-      position: relative;
       box-shadow: 0 0 18px rgba(34,197,94,0.55);
       display: flex;
       align-items: center;
@@ -81,13 +71,7 @@
       text-decoration: none;
       color: #fff;
     }
-
-    .brand-text {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
+    .brand-text { display: flex; flex-direction: column; gap: 2px; }
     .brand-title {
       font-weight: 600;
       letter-spacing: 0.03em;
@@ -95,17 +79,10 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      flex-wrap: wrap;
     }
-
-    .brand-title a {
-      color: #f9fafb;
-      text-decoration: none;
-    }
-
-    .brand-title a:hover {
-      text-decoration: underline;
-    }
-
+    .brand-title a { color: #f9fafb; text-decoration: none; }
+    .brand-title a:hover { text-decoration: underline; }
     .brand-pill {
       font-size: 11px;
       padding: 2px 7px;
@@ -113,13 +90,9 @@
       background: rgba(34,197,94,0.1);
       border: 1px solid rgba(34,197,94,0.4);
       color: var(--accent);
+      text-decoration: none;
     }
-
-    .brand-subtitle {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
+    .brand-subtitle { font-size: 11px; color: var(--text-soft); }
     .status {
       display: flex;
       align-items: center;
@@ -130,7 +103,6 @@
       background: rgba(15,23,42,0.8);
       border: 1px solid rgba(148,163,184,0.5);
     }
-
     .status-dot {
       width: 8px;
       height: 8px;
@@ -138,27 +110,17 @@
       background: var(--accent);
       box-shadow: 0 0 10px rgba(34,197,94,0.7);
     }
-
-    .status-text-strong {
-      font-weight: 500;
-    }
-
-    .status-text-soft {
-      color: var(--text-soft);
-    }
-
+    .status-text-strong { font-weight: 500; }
+    .status-text-soft { color: var(--text-soft); }
     .main {
       display: grid;
-      grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.2fr);
+      grid-template-columns: minmax(0,2.4fr) minmax(0,1.2fr);
       gap: 14px;
     }
-
     @media (max-width: 768px) {
-      .main {
-        grid-template-columns: minmax(0, 1fr);
-      }
+      .main { grid-template-columns: minmax(0,1fr); }
+      .app { padding: 14px; }
     }
-
     .chat-card {
       background: radial-gradient(circle at top left, rgba(59,130,246,0.12) 0, rgba(15,23,42,0.98) 45%);
       border-radius: var(--radius-xl);
@@ -170,7 +132,6 @@
       position: relative;
       overflow: hidden;
     }
-
     .chat-scroll {
       max-height: 360px;
       overflow-y: auto;
@@ -182,29 +143,14 @@
       scrollbar-color: rgba(148,163,184,0.8) transparent;
       font-size: 13px;
     }
-
-    .chat-scroll::-webkit-scrollbar {
-      width: 5px;
-    }
-
-    .chat-scroll::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
+    .chat-scroll::-webkit-scrollbar { width: 5px; }
+    .chat-scroll::-webkit-scrollbar-track { background: transparent; }
     .chat-scroll::-webkit-scrollbar-thumb {
       background: rgba(148,163,184,0.85);
       border-radius: 999px;
     }
-
-    .msg-row {
-      display: flex;
-      gap: 6px;
-    }
-
-    .msg-row.user {
-      justify-content: flex-end;
-    }
-
+    .msg-row { display: flex; gap: 6px; }
+    .msg-row.user { justify-content: flex-end; }
     .msg-avatar {
       width: 26px;
       height: 26px;
@@ -216,11 +162,9 @@
       justify-content: center;
       font-size: 14px;
     }
-
     .msg-avatar.user {
       background: radial-gradient(circle at 30% 20%, #38bdf8 0, #38bdf8 32%, #a855f7 60%, #020617 100%);
     }
-
     .msg-bubble {
       max-width: 78%;
       padding: 7px 10px;
@@ -230,16 +174,11 @@
       word-wrap: break-word;
       backdrop-filter: blur(4px);
     }
-
-    .msg-row.assistant .msg-bubble {
-      background: rgba(15,23,42,0.95);
-    }
-
+    .msg-row.assistant .msg-bubble { background: rgba(15,23,42,0.95); }
     .msg-row.user .msg-bubble {
       background: var(--accent-soft);
       border-color: rgba(34,197,94,0.7);
     }
-
     .msg-meta {
       display: flex;
       align-items: center;
@@ -248,14 +187,12 @@
       color: var(--text-soft);
       margin-top: 3px;
     }
-
     .msg-role {
       text-transform: uppercase;
       letter-spacing: 0.08em;
       font-weight: 600;
       font-size: 10px;
     }
-
     .chip {
       font-size: 10px;
       padding: 1px 6px;
@@ -263,7 +200,6 @@
       border: 1px solid rgba(148,163,184,0.5);
       color: var(--text-soft);
     }
-
     .controls {
       display: flex;
       align-items: center;
@@ -273,26 +209,20 @@
       border-top: 1px dashed rgba(148,163,184,0.45);
       margin-top: 4px;
     }
-
     .controls-left {
       display: flex;
       flex-direction: column;
       gap: 4px;
       font-size: 11px;
       color: var(--text-soft);
+      flex: 1;
     }
-
-    .controls-left strong {
-      color: var(--text);
-      font-weight: 500;
-    }
-
+    .controls-left strong { color: var(--text); font-weight: 500; }
     .hint-row {
       display: flex;
       flex-wrap: wrap;
       gap: 4px;
     }
-
     .hint-pill {
       font-size: 11px;
       padding: 2px 8px;
@@ -302,19 +232,12 @@
       cursor: pointer;
       transition: background 0.15s, border-color 0.15s, transform 0.08s;
     }
-
     .hint-pill:hover {
       background: rgba(30,64,175,0.9);
       border-color: rgba(59,130,246,0.9);
       transform: translateY(-1px);
     }
-
-    .text-input-row {
-      display: flex;
-      gap: 6px;
-      margin-top: 2px;
-    }
-
+    .text-input-row { display: flex; gap: 6px; margin-top: 2px; }
     .text-input {
       flex: 1;
       border-radius: 999px;
@@ -325,11 +248,7 @@
       color: var(--text);
       outline: none;
     }
-
-    .text-input::placeholder {
-      color: var(--text-soft);
-    }
-
+    .text-input::placeholder { color: var(--text-soft); }
     .send-btn {
       border-radius: 999px;
       border: none;
@@ -339,13 +258,9 @@
       background: radial-gradient(circle at 20% 0, rgba(34,197,94,1) 0, rgba(34,197,94,0.7) 32%, rgba(37,99,235,1) 100%);
       color: #f9fafb;
       cursor: pointer;
+      white-space: nowrap;
     }
-
-    .send-btn:disabled {
-      opacity: 0.5;
-      cursor: default;
-    }
-
+    .send-btn:disabled { opacity: 0.5; cursor: default; }
     .mic-btn {
       position: relative;
       border: none;
@@ -361,20 +276,18 @@
       background: radial-gradient(circle at 20% 0, rgba(34,197,94,1) 0, rgba(34,197,94,0.6) 32%, rgba(37,99,235,1) 100%);
       box-shadow: 0 0 0 0 rgba(34,197,94,0.5);
       transition: transform 0.1s, box-shadow 0.2s, filter 0.12s;
+      flex-shrink: 0;
     }
-
     .mic-btn-idle:hover {
       transform: translateY(-1px);
       filter: brightness(1.08);
       box-shadow: 0 0 0 6px rgba(34,197,94,0.18);
     }
-
     .mic-btn-recording {
       background: radial-gradient(circle at 20% 0, rgba(239,68,68,1) 0, rgba(239,68,68,0.6) 32%, rgba(37,99,235,1) 100%);
       box-shadow: 0 0 0 8px rgba(248,113,113,0.45);
       animation: pulse 1.4s infinite;
     }
-
     .mic-icon {
       width: 18px;
       height: 18px;
@@ -385,17 +298,8 @@
       justify-content: center;
       font-size: 11px;
     }
-
-    .mic-text-main {
-      display: block;
-    }
-
-    .mic-text-sub {
-      display: block;
-      font-size: 11px;
-      opacity: 0.85;
-    }
-
+    .mic-text-main { display: block; }
+    .mic-text-sub { display: block; font-size: 11px; opacity: 0.85; }
     .mic-indicator {
       width: 5px;
       height: 16px;
@@ -404,7 +308,6 @@
       position: relative;
       overflow: hidden;
     }
-
     .mic-indicator-bar {
       position: absolute;
       bottom: 0;
@@ -414,11 +317,9 @@
       background: linear-gradient(to top, #22c55e, #a3e635);
       transform-origin: bottom;
     }
-
     .mic-btn-recording .mic-indicator-bar {
       animation: level 0.5s infinite ease-in-out alternate;
     }
-
     .side-card {
       background: radial-gradient(circle at top right, rgba(34,197,94,0.12) 0, rgba(15,23,42,0.98) 45%);
       border-radius: var(--radius-xl);
@@ -431,7 +332,6 @@
       position: relative;
       overflow: hidden;
     }
-
     .side-section-title {
       font-size: 12px;
       font-weight: 600;
@@ -439,21 +339,18 @@
       text-transform: uppercase;
       color: var(--text-soft);
     }
-
     .side-steps {
       display: flex;
       flex-direction: column;
       gap: 6px;
       margin-top: 4px;
     }
-
     .step-row {
       display: grid;
       grid-template-columns: auto minmax(0, 1fr);
       gap: 6px;
       align-items: start;
     }
-
     .step-badge {
       font-size: 11px;
       padding: 2px 6px;
@@ -461,29 +358,10 @@
       background: rgba(15,23,42,0.9);
       border: 1px solid rgba(148,163,184,0.7);
     }
-
-    .step-body {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .step-title {
-      font-weight: 500;
-      font-size: 12px;
-    }
-
-    .step-desc {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
-    .side-tagline {
-      margin-top: 6px;
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
+    .step-body { display: flex; flex-direction: column; gap: 2px; }
+    .step-title { font-weight: 500; font-size: 12px; }
+    .step-desc { font-size: 11px; color: var(--text-soft); }
+    .side-tagline { margin-top: 6px; font-size: 11px; color: var(--text-soft); }
     .small-pill {
       display: inline-flex;
       align-items: center;
@@ -494,36 +372,263 @@
       border: 1px dashed rgba(148,163,184,0.6);
       background: rgba(15,23,42,0.9);
     }
-
-    .error-text {
-      margin-top: 4px;
-      font-size: 11px;
-      color: var(--danger);
-    }
-
+    .error-text { margin-top: 4px; font-size: 11px; color: var(--danger); }
     .text-mono {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
-
     @keyframes pulse {
-      0% {
-        box-shadow: 0 0 0 6px rgba(248,113,113,0.6);
-      }
-      70% {
-        box-shadow: 0 0 0 12px rgba(248,113,113,0);
-      }
-      100% {
-        box-shadow: 0 0 0 6px rgba(248,113,113,0);
-      }
+      0% { box-shadow: 0 0 0 6px rgba(248,113,113,0.6); }
+      70% { box-shadow: 0 0 0 12px rgba(248,113,113,0); }
+      100% { box-shadow: 0 0 0 6px rgba(248,113,113,0); }
+    }
+    @keyframes level {
+      0% { transform: scaleY(0.2); }
+      100% { transform: scaleY(1); }
     }
 
-    @keyframes level {
-      0% {
-        transform: scaleY(0.2);
-      }
-      100% {
-        transform: scaleY(1);
-      }
+    .hero-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 12px;
+    }
+    .hero-main {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.35fr);
+      gap: 10px;
+    }
+    @media (max-width: 768px) {
+      .hero-main { grid-template-columns: minmax(0, 1fr); }
+    }
+    .hero-card {
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148,163,184,0.5);
+      padding: 10px 12px;
+      background: radial-gradient(circle at top left, rgba(59,130,246,0.12) 0, rgba(15,23,42,0.98) 45%);
+      font-size: 12px;
+    }
+    .hero-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .hero-desc {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+    .hero-actions {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .hero-pill {
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      font-size: 12px;
+      background: rgba(15,23,42,0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .hero-pill.main {
+      background: radial-gradient(circle at 20% 0, rgba(34,197,94,1) 0, rgba(34,197,94,0.7) 32%, rgba(37,99,235,1) 100%);
+      border-color: rgba(34,197,94,0.8);
+      color: #f9fafb;
+    }
+    .hero-pill span.icon { font-size: 14px; }
+
+    .popup-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 40;
+    }
+    .popup-backdrop.show { display: flex; }
+    .popup-card {
+      width: 100%;
+      max-width: 860px;
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
+      border: 1px solid rgba(148,163,184,0.6);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 14px 16px;
+      position: relative;
+    }
+    .popup-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(15,23,42,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-soft);
+      z-index: 2;
+    }
+    .popup-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      padding-right: 34px;
+    }
+    .popup-title-main {
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .popup-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+    .popup-pill {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.6);
+    }
+    .popup-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr);
+      gap: 12px;
+    }
+    @media (max-width: 768px) {
+      .popup-grid { grid-template-columns: minmax(0,1fr); }
+    }
+    .popup-col-card {
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148,163,184,0.6);
+      padding: 10px 12px;
+      background: radial-gradient(circle at top left, rgba(59,130,246,0.12) 0, rgba(15,23,42,0.98) 55%);
+      font-size: 12px;
+    }
+    .popup-section-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+    }
+    .community-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148,163,184,0.7);
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      background: rgba(15,23,42,0.95);
+    }
+    .community-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .community-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .community-tag {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      color: var(--text-soft);
+    }
+    .community-desc {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+    }
+    .community-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: none;
+      font-size: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      color: #f9fafb;
+      background: radial-gradient(circle at 20% 0, rgba(34,197,94,1) 0, rgba(34,197,94,0.6) 32%, rgba(37,99,235,1) 100%);
+    }
+    .community-btn.secondary {
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.7);
+      color: var(--text);
+    }
+    .link-list-item {
+      font-size: 11px;
+      padding: 6px 8px;
+      border-radius: var(--radius-md);
+      border: 1px dashed rgba(148,163,184,0.6);
+      margin-bottom: 6px;
+    }
+    .link-label {
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+    .link-anchor {
+      font-size: 11px;
+      color: #60a5fa;
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .link-anchor:hover { text-decoration: underline; }
+    .link-note {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 4px;
+    }
+    .top-right-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .top-circle-btn {
+      border-radius: 999px;
+      padding: 5px 16px;
+      border: none;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .top-circle-main {
+      background: radial-gradient(circle at 20% 0, rgba(34,197,94,1) 0, rgba(34,197,94,0.6) 32%, rgba(37,99,235,1) 100%);
+      color: #f9fafb;
+    }
+    .top-circle-secondary {
+      background: rgba(15,23,42,0.9);
+      color: var(--text);
+      border: 1px solid rgba(148,163,184,0.7);
+    }
+    @media (max-width: 768px) {
+      .hero-top { flex-direction: column; align-items: flex-start; }
+      .top-right-buttons { flex-direction: row; flex-wrap: wrap; }
     }
   </style>
 </head>
@@ -541,29 +646,64 @@
         <div class="brand-text">
           <div class="brand-title">
             <a href="https://robotntq.netlify.app/" target="_blank">RoBot.5320</a>
-            <a
-              href="https://www.facebook.com/quoc.nguyentruong.96930?locale=vi_VN"
-              target="_blank"
-              class="brand-pill"
-            >
-              RoBot5320 Web
-            </a>
+            <span class="brand-pill">Nguyễn Trường Quốc · 2k5</span>
           </div>
           <div class="brand-subtitle">
-            Trợ lý ảo RoBot5320 – Ghi âm → ChatGPT → TTS → ESP32
+            Trợ lý ảo RoBot5320 – nền tảng Xiaozhi ESP32, AI-IoT cho cộng đồng Việt Nam.
           </div>
         </div>
       </div>
-      <div class="status">
-        <div class="status-dot" id="status-dot"></div>
-        <div>
-          <div class="status-text-strong" id="status-main">Sẵn sàng ghi âm</div>
-          <div class="status-text-soft" id="status-sub">Nhấn giữ nút micro để nói</div>
+      <div class="top-right-buttons">
+        <div class="status">
+          <div class="status-dot" id="status-dot"></div>
+          <div>
+            <div class="status-text-strong" id="status-main">Sẵn sàng ghi âm</div>
+            <div class="status-text-soft" id="status-sub">Nhấn giữ nút micro để nói</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;">
+          <button id="open-community-btn" class="top-circle-btn top-circle-main" type="button">
+            🌐 Mở cửa sổ cộng đồng
+          </button>
+          <a
+            class="top-circle-btn top-circle-secondary"
+            href="https://www.tiktok.com/@robot.5320?is_from_webapp=1&sender_device=pc"
+            target="_blank"
+          >
+            🎬 Xem TikTok RoBot5320
+          </a>
         </div>
       </div>
     </header>
 
-    <main class="main">
+    <section class="hero-main">
+      <div class="hero-card">
+        <div class="hero-title">Trợ lý ảo RoBot5320</div>
+        <div class="hero-desc">
+          Trang web này dùng để thử trợ lý ảo RoBot5320: backend Railway, chat bằng giọng nói hoặc gõ text.
+          Nếu muốn nạp firmware ESP32-S3, hãy dùng trang nạp firmware riêng.
+        </div>
+        <div class="hero-actions">
+          <a class="hero-pill main" href="https://robotntq.netlify.app/" target="_blank">
+            <span class="icon">✅</span>
+            <span>Trang nạp Firmware ESP32-S3</span>
+          </a>
+          <a class="hero-pill" href="https://www.facebook.com/quoc.nguyentruong.96930" target="_blank">
+            <span class="icon">👤</span>
+            <span>Facebook Nguyễn Trường Quốc</span>
+          </a>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="hero-title">RoBot5320 đang làm gì?</div>
+        <div class="hero-desc">
+          Xây backend trợ lý ảo, kết nối ESP32-S3, tích hợp TTS, và mở cộng đồng RoBot5320 cho anh em thử
+          nghiệm AI-IoT. Nếu thấy hay, có thể tham gia nhóm Zalo hoặc Facebook để cùng thảo luận.
+        </div>
+      </div>
+    </section>
+
+    <main class="main" style="margin-top:12px;">
       <section class="chat-card">
         <div id="chat" class="chat-scroll"></div>
 
@@ -571,15 +711,13 @@
           <div class="controls-left">
             <div>
               <strong>Điều khiển</strong>
-              <span id="last-latency" class="chip" style="margin-left:6px; display:none"></span>
+              <span id="last-latency" class="chip" style="margin-left:6px;display:none"></span>
             </div>
             <div class="hint-row">
               <button class="hint-pill" data-hint="Xin chào, hãy tự giới thiệu.">Xin chào</button>
               <button class="hint-pill" data-hint="Hôm nay thời tiết thế nào?">Thời tiết</button>
               <button class="hint-pill" data-hint="Kể cho tôi một câu chuyện vui.">Kể chuyện</button>
-              <button class="hint-pill" data-hint="Gợi ý giúp tôi một dự án với ESP32-S3.">
-                Dự án ESP32
-              </button>
+              <button class="hint-pill" data-hint="Gợi ý giúp tôi một dự án với ESP32-S3.">Dự án ESP32</button>
             </div>
             <div class="text-input-row">
               <input
@@ -615,59 +753,180 @@
             <div class="step-body">
               <div class="step-title">Ghi âm trên web</div>
               <div class="step-desc">
-                Sử dụng WebRTC/MediaRecorder thu âm từ mic trình duyệt, đóng gói thành file
-                <span class="text-mono">webm/ogg</span>.
+                Dùng WebRTC/MediaRecorder thu âm từ mic trình duyệt, đóng gói file
+                <span class="text-mono">webm/ogg/mp4</span>.
               </div>
             </div>
           </div>
-
           <div class="step-row">
             <div class="step-badge">2</div>
             <div class="step-body">
               <div class="step-title">Gửi lên server RoBot5320</div>
               <div class="step-desc">
-                Frontend POST file tới <span class="text-mono">/api/voice</span>. Backend RoBot5320
-                nhận, lưu tạm, gửi vào OpenAI ASR/ChatGPT.
+                Frontend POST file tới <span class="text-mono">/api/voice</span> trên Railway.
+                RoBot5320 nhận, phiên âm, gửi vào OpenAI ASR/ChatGPT.
               </div>
             </div>
           </div>
-
           <div class="step-row">
             <div class="step-badge">3</div>
             <div class="step-body">
               <div class="step-title">ChatGPT + TTS</div>
               <div class="step-desc">
-                Server gọi ChatGPT sinh text trả lời, rồi gọi API TTS tạo file audio để ESP32 phát.
+                Server gọi ChatGPT sinh câu trả lời, rồi gọi API TTS tạo file audio
+                Opus để ESP32 phát.
               </div>
             </div>
           </div>
-
           <div class="step-row">
             <div class="step-badge">4</div>
             <div class="step-body">
               <div class="step-title">ESP32 phát ra loa</div>
               <div class="step-desc">
-                ESP32 nhận link hoặc stream audio từ server, chơi qua I2S DAC/AMP.
+                ESP32 nhận link hoặc stream audio từ server, phát qua I2S DAC/AMP.
               </div>
             </div>
           </div>
         </div>
-
         <div class="side-tagline">
           <span class="small-pill">
-            <span>🔗</span>
-            <span>
-              Backend RoBot5320:
-              <span class="text-mono"> /api/voice </span>
-              + kênh riêng cho ESP32 (HTTP/WebSocket/MQTT)
-            </span>
+            🔗 Backend RoBot5320:
+            <span class="text-mono">/api/voice</span> + kênh riêng cho ESP32 (HTTP/WebSocket/MQTT)
           </span>
         </div>
       </aside>
     </main>
   </div>
 
+  <div id="community-popup" class="popup-backdrop">
+    <div class="popup-card">
+      <button class="popup-close" id="popup-close-btn">✕</button>
+      <div class="popup-header-row">
+        <div>
+          <div class="popup-title-main">Cổng cộng đồng RoBot5320</div>
+          <div class="popup-sub">
+            Chọn một trong các kênh dưới đây để tham gia cộng đồng, hỏi đáp firmware, ESP32, AI-IoT.
+          </div>
+        </div>
+        <div class="popup-pill">
+          Trang nạp firmware ESP32-S3:
+          <span class="text-mono">robotntq.netlify.app</span>
+        </div>
+      </div>
+
+      <div class="popup-grid">
+        <div class="popup-col-card">
+          <div class="popup-section-title">Truy cập nhanh các kênh RoBot5320</div>
+
+          <div class="community-card">
+            <div class="community-header">
+              <div class="community-name">Nhóm Facebook RoBot5320</div>
+              <div class="community-tag">Kênh chính</div>
+            </div>
+            <div class="community-desc">
+              Nơi thông báo firmware mới, hướng dẫn nạp, kinh nghiệm debug, chia sẻ project, cập nhật OTA.
+            </div>
+            <a
+              class="community-btn"
+              href="https://www.facebook.com/groups/733788016403934?locale=vi_VN"
+              target="_blank"
+            >
+              👍 Tham gia nhóm Facebook
+            </a>
+          </div>
+
+          <div class="community-card">
+            <div class="community-header">
+              <div class="community-name">Cộng đồng Zalo RoBot5320 VN</div>
+              <div class="community-tag">Chat nhanh</div>
+            </div>
+            <div class="community-desc">
+              Hỏi nhanh, chia sẻ log lỗi, hình flash, OTA, update thông báo quan trọng.
+            </div>
+            <a
+              class="community-btn"
+              href="https://zalo.me/g/ghwomx800"
+              target="_blank"
+            >
+              💬 Vào Zalo nhóm chính
+            </a>
+          </div>
+
+          <div class="community-card">
+            <div class="community-header">
+              <div class="community-name">Nhóm Zalo AI-IoT phụ</div>
+              <div class="community-tag">Dành cho IoT</div>
+            </div>
+            <div class="community-desc">
+              Thảo luận thêm về AI-IoT, nhà thông minh, robot mở rộng… dành cho anh em thích nghiên cứu sâu.
+            </div>
+            <a
+              class="community-btn secondary"
+              href="https://zalo.me/g/fsyuiz890"
+              target="_blank"
+            >
+              🤖 Vào Zalo nhóm AI-IoT
+            </a>
+          </div>
+
+          <div class="community-card">
+            <div class="community-header">
+              <div class="community-name">Xem TikTok RoBot5320</div>
+              <div class="community-tag">Video demo</div>
+            </div>
+            <div class="community-desc">
+              Video demo trợ lý ảo, project robot, firmware mới, clip hướng dẫn nhanh do RoBot5320 thực hiện.
+            </div>
+            <a
+              class="community-btn secondary"
+              href="https://www.tiktok.com/@robot.5320?is_from_webapp=1&sender_device=pc"
+              target="_blank"
+            >
+              🎥 Mở TikTok @robot.5320
+            </a>
+          </div>
+        </div>
+
+        <div class="popup-col-card">
+          <div class="popup-section-title">Liên kết khác của RoBot5320</div>
+
+          <div class="link-list-item">
+            <div class="link-label">✅ Trang nạp Firmware ESP32-S3:</div>
+            <a class="link-anchor" href="https://robotntq.netlify.app/" target="_blank">
+              https://robotntq.netlify.app/
+            </a>
+          </div>
+
+          <div class="link-list-item">
+            <div class="link-label">👤 Facebook cá nhân Nguyễn Trường Quốc:</div>
+            <a
+              class="link-anchor"
+              href="https://www.facebook.com/quoc.nguyentruong.96930"
+              target="_blank"
+            >
+              facebook.com/quoc.nguyentruong.96930
+            </a>
+          </div>
+
+          <div class="link-list-item">
+            <div class="link-label">📱 Liên hệ nhanh qua Zalo cá nhân:</div>
+            <div class="link-anchor text-mono">0869635798</div>
+            <div class="link-note">
+              Nếu cần hỗ trợ nạp firmware hoặc debug ESP32, cứ nhắn tin Zalo kèm ảnh log/ảnh mạch.
+            </div>
+          </div>
+
+          <div class="link-note">
+            Lưu ý: Nếu bạn đã tham gia đủ nhóm mà không muốn xem cửa sổ này nữa, cứ bấm nút X góc trên bên phải.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
+    const BASE_URL = "https://robot5320xiaozhi-backend-production.up.railway.app"
+
     const chatEl = document.getElementById("chat")
     const micBtn = document.getElementById("mic-btn")
     const statusDot = document.getElementById("status-dot")
@@ -679,12 +938,16 @@
     const latencyEl = document.getElementById("last-latency")
     const textInput = document.getElementById("text-input")
     const sendBtn = document.getElementById("send-btn")
+    const popup = document.getElementById("community-popup")
+    const popupCloseBtn = document.getElementById("popup-close-btn")
+    const openCommunityBtn = document.getElementById("open-community-btn")
 
     let mediaStream = null
     let mediaRecorder = null
     let chunks = []
     let isRecording = false
     let sendingText = false
+    let currentMimeType = ""
 
     function appendMessage(role, text) {
       const row = document.createElement("div")
@@ -781,6 +1044,25 @@
       mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true })
     }
 
+    function chooseMimeType() {
+      if (!window.MediaRecorder) return ""
+      if (MediaRecorder.isTypeSupported("audio/webm;codecs=opus")) return "audio/webm;codecs=opus"
+      if (MediaRecorder.isTypeSupported("audio/webm")) return "audio/webm"
+      if (MediaRecorder.isTypeSupported("audio/mp4")) return "audio/mp4"
+      if (MediaRecorder.isTypeSupported("audio/mpeg")) return "audio/mpeg"
+      return ""
+    }
+
+    function getExtFromMime(mime) {
+      if (!mime) return "webm"
+      if (mime.includes("webm")) return "webm"
+      if (mime.includes("ogg")) return "ogg"
+      if (mime.includes("wav")) return "wav"
+      if (mime.includes("mpeg") || mime.includes("mp3")) return "mp3"
+      if (mime.includes("mp4") || mime.includes("aac") || mime.includes("m4a")) return "m4a"
+      return "webm"
+    }
+
     async function startRecording() {
       try {
         await initMedia()
@@ -790,14 +1072,30 @@
       }
 
       chunks = []
-      mediaRecorder = new MediaRecorder(mediaStream, { mimeType: "audio/webm" })
+      currentMimeType = chooseMimeType()
+      const options = currentMimeType ? { mimeType: currentMimeType } : {}
+
+      try {
+        mediaRecorder = new MediaRecorder(mediaStream, options)
+      } catch (e) {
+        setError("MediaRecorder không hỗ trợ trên trình duyệt này.")
+        return
+      }
+
       mediaRecorder.ondataavailable = e => {
-        if (e.data.size > 0) chunks.push(e.data)
+        if (e.data && e.data.size > 0) chunks.push(e.data)
       }
+
       mediaRecorder.onstop = () => {
-        const blob = new Blob(chunks, { type: "audio/webm" })
-        uploadAudio(blob)
+        const blob = new Blob(chunks, { type: currentMimeType || "audio/webm" })
+        if (blob.size < 1024) {
+          setError("Âm thanh quá ngắn, vui lòng nói lâu hơn một chút.")
+          setIdleUI()
+          return
+        }
+        uploadAudio(blob, currentMimeType)
       }
+
       mediaRecorder.start()
       setRecordingUI()
     }
@@ -811,17 +1109,19 @@
       setThinkingUI()
     }
 
-    async function uploadAudio(blob) {
+    async function uploadAudio(blob, mimeType) {
       const start = performance.now()
       setError("")
       appendMessage("user", "[Voice] Bạn vừa nói. Đang gửi lên server RoBot5320...")
 
       const form = new FormData()
-      form.append("audio", blob, "input.webm")
+      const ext = getExtFromMime(mimeType)
+      form.append("audio", blob, "input." + ext)
+      form.append("mimeType", mimeType || "")
 
       let response
       try {
-        response = await fetch("/api/voice", {
+        response = await fetch(BASE_URL + "/api/voice", {
           method: "POST",
           body: form
         })
@@ -875,11 +1175,15 @@
       startRecording()
     })
 
-    micBtn.addEventListener("touchstart", e => {
-      e.preventDefault()
-      if (isRecording) return
-      startRecording()
-    }, { passive: false })
+    micBtn.addEventListener(
+      "touchstart",
+      e => {
+        e.preventDefault()
+        if (isRecording) return
+        startRecording()
+      },
+      { passive: false }
+    )
 
     function stopIfRecording() {
       if (isRecording) stopRecording()
@@ -889,14 +1193,20 @@
     micBtn.addEventListener("mouseleave", () => {
       if (isRecording) stopRecording()
     })
-    micBtn.addEventListener("touchend", e => {
-      e.preventDefault()
-      stopIfRecording()
-    })
-    micBtn.addEventListener("touchcancel", e => {
-      e.preventDefault()
-      stopIfRecording()
-    })
+    micBtn.addEventListener(
+      "touchend",
+      e => {
+        e.preventDefault()
+        stopIfRecording()
+      }
+    )
+    micBtn.addEventListener(
+      "touchcancel",
+      e => {
+        e.preventDefault()
+        stopIfRecording()
+      }
+    )
 
     document.querySelectorAll(".hint-pill").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -920,7 +1230,7 @@
 
       let response
       try {
-        response = await fetch("/api/text", {
+        response = await fetch(BASE_URL + "/api/text", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text })
@@ -981,6 +1291,27 @@
       micBtn.disabled = true
       micBtn.style.opacity = "0.5"
     }
+
+    let popupTimer = setTimeout(() => {
+      popup.classList.add("show")
+    }, 10000)
+
+    popupCloseBtn.addEventListener("click", () => {
+      popup.classList.remove("show")
+      clearTimeout(popupTimer)
+    })
+
+    openCommunityBtn.addEventListener("click", () => {
+      popup.classList.add("show")
+      clearTimeout(popupTimer)
+    })
+
+    popup.addEventListener("click", e => {
+      if (e.target === popup) {
+        popup.classList.remove("show")
+        clearTimeout(popupTimer)
+      }
+    })
   </script>
 </body>
 </html>
