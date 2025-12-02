@@ -1,16 +1,12 @@
 const express = require("express")
 const multer = require("multer")
-const cors = require("cors")
 const fs = require("fs")
 const path = require("path")
 const OpenAI = require("openai")
+const cors = require("cors")
 
 const app = express()
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 25 * 1024 * 1024 }
-})
-
+const upload = multer({ storage: multer.memoryStorage() })
 const PORT = process.env.PORT || 3000
 
 const openai = new OpenAI({
@@ -35,7 +31,6 @@ function addMessage(deviceId, role, content) {
 function checkCreatorQuestion(text) {
   if (!text) return null
   const t = text.toLowerCase()
-
   const keywords = [
     "nguồn gốc",
     "cha đẻ",
@@ -52,43 +47,35 @@ function checkCreatorQuestion(text) {
     "who made you",
     "your creator"
   ]
-
   const matched = keywords.some(k => t.includes(k))
   if (!matched) return null
-
   return "RoBot5320 được tạo ra và phát triển bởi anh Nguyễn Trường Quốc (2k5)."
 }
 
 function pickExtFromMime(mime) {
-  if (!mime) return "webm"
-  const m = mime.toLowerCase()
-  if (m.includes("webm")) return "webm"
-  if (m.includes("ogg")) return "ogg"
-  if (m.includes("mp4") || m.includes("m4a") || m.includes("mpeg")) return "mp4"
-  if (m.includes("wav")) return "wav"
-  if (m.includes("mp3")) return "mp3"
-  return "webm"
+  if (!mime) return ".webm"
+  if (mime.includes("webm")) return ".webm"
+  if (mime.includes("ogg")) return ".ogg"
+  if (mime.includes("wav")) return ".wav"
+  if (mime.includes("mpeg") || mime.includes("mp3")) return ".mp3"
+  if (mime.includes("mp4") || mime.includes("aac") || mime.includes("m4a")) return ".m4a"
+  return ".webm"
 }
 
-async function transcribeAudio(file) {
-  if (!file || !file.buffer || !file.size) {
-    throw new Error("Audio trống hoặc không nhận được dữ liệu")
+async function transcribeAudio(buffer, mimeType) {
+  const ext = pickExtFromMime(mimeType)
+  const tempPath = path.join(__dirname, "temp_input" + ext)
+  await fs.promises.writeFile(tempPath, buffer)
+
+  try {
+    const resp = await openai.audio.transcriptions.create({
+      file: fs.createReadStream(tempPath),
+      model: "gpt-4o-transcribe"
+    })
+    return resp.text || ""
+  } finally {
+    fs.promises.unlink(tempPath).catch(() => {})
   }
-
-  if (file.size < 2000) {
-    throw new Error("Audio quá ngắn, hãy nói lâu hơn một chút")
-  }
-
-  const ext = pickExtFromMime(file.mimetype)
-  const name = "input." + ext
-
-  const resp = await openai.audio.transcriptions.create({
-    file: { data: file.buffer, name },
-    model: "gpt-4o-transcribe",
-    language: "vi"
-  })
-
-  return resp.text || ""
 }
 
 async function askChatGpt(text, deviceId = "web") {
@@ -124,7 +111,6 @@ async function callTts(text, outPath) {
     format: "opus",
     input: text
   })
-
   const buffer = Buffer.from(await speech.arrayBuffer())
   await fs.promises.writeFile(outPath, buffer)
 }
@@ -134,25 +120,38 @@ if (!fs.existsSync(audioDir)) {
   fs.mkdirSync(audioDir, { recursive: true })
 }
 
-app.use(cors({ origin: "*"}))
+app.use(cors())
 app.use(express.static(__dirname))
 app.use("/tts", express.static(audioDir))
 app.use(express.json())
 
 app.get("/", (req, res) => {
-  res.send("RoBot5320 XiaoZhi backend OK")
+  res.sendFile(path.join(__dirname, "index.html"))
 })
 
 app.post("/api/voice", upload.single("audio"), async (req, res) => {
   try {
-    const file = req.file
-    if (!file) {
-      return res.status(400).json({ error: "Thiếu file audio" })
+    if (!req.file || !req.file.buffer || req.file.size === 0) {
+      return res.status(400).json({ error: "Không nhận được audio hợp lệ." })
     }
 
     const deviceId = req.headers["x-device-id"] || "web"
+    const mimeType = req.body.mimeType || req.file.mimetype || ""
 
-    const userText = await transcribeAudio(file)
+    let userText = ""
+    try {
+      userText = await transcribeAudio(req.file.buffer, mimeType)
+    } catch (err) {
+      console.error("Transcribe error:", err)
+      return res
+        .status(500)
+        .json({ error: "Không phiên âm được audio (Audio có thể hỏng hoặc không được hỗ trợ)." })
+    }
+
+    if (!userText || !userText.trim()) {
+      userText = "Người dùng vừa nói nhưng hệ thống không nghe rõ."
+    }
+
     const assistantText = await askChatGpt(userText, deviceId)
 
     const fileName = Date.now() + ".opus"
@@ -166,20 +165,17 @@ app.post("/api/voice", upload.single("audio"), async (req, res) => {
       device_id: deviceId
     })
   } catch (e) {
-    console.error("ERROR /api/voice:", e)
-    res.status(500).json({ error: e.message || "Server error" })
+    console.error(e)
+    res.status(500).json({ error: e.message || "Internal error" })
   }
 })
 
 app.post("/api/text", async (req, res) => {
   try {
     const text = req.body.text
-    if (!text) {
-      return res.status(400).json({ error: "Thiếu text" })
-    }
+    if (!text) return res.status(400).json({ error: "Thiếu text" })
 
     const deviceId = req.headers["x-device-id"] || "web"
-
     const assistantText = await askChatGpt(text, deviceId)
 
     const fileName = Date.now() + ".opus"
@@ -193,8 +189,8 @@ app.post("/api/text", async (req, res) => {
       device_id: deviceId
     })
   } catch (e) {
-    console.error("ERROR /api/text:", e)
-    res.status(500).json({ error: e.message || "Server error" })
+    console.error(e)
+    res.status(500).json({ error: e.message || "Internal error" })
   }
 })
 
